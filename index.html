@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Калькулятор заработка БО</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* ← ВЫРАВНИВАЕМ ВЛЕВО */
+      transition: background 0.5s ease, color 0.3s ease;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 700px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .counter-block {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 15px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, background 0.3s;
+    }
+
+    .counter-block label {
+      font-size: 1rem;
+      flex: 1 0 160px;
+      min-width: 140px;
+    }
+
+    .counter-block input[type="number"] {
+      font-size: 1rem;
+      width: 60px;
+      padding: 6px;
+      border: none;
+      border-radius: 6px;
+      background: #f0f0f0;
+      color: #333;
+      text-align: center;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .counter-block input:focus {
+      background: #e1e1e1;
+      transform: scale(1.05);
+    }
+
+    .counter-block button {
+      font-size: 1rem;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 15px;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .counter-block button:hover {
+      transform: scale(1.05);
+    }
+
+    #earnings {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-top: 20px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      animation: fadeIn 1s ease-out;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .light-theme {
+      background: linear-gradient(to right, #fff8e1, #ffe0b2);
+      color: #333;
+    }
+
+    .light-theme .counter-block {
+      background: #fffaf0;
+    }
+
+    .light-theme .counter-block button {
+      background: #f4a261;
+    }
+
+    .light-theme #earnings {
+      background: #ffd166;
+      color: #222;
+      border: 2px solid #f4a261;
+    }
+
+    .light-theme .toggle-btn {
+      background-color: #f4a261;
+    }
+
+    .light-theme .reset-btn {
+      background-color: #ffb4a2;
+    }
+
+    .dark-theme {
+      background: linear-gradient(to bottom, #512d6d, #370f43);
+      color: #e0e0e0;
+    }
+
+    .dark-theme .counter-block {
+      background: #4a1c6c;
+    }
+
+    .dark-theme .counter-block button {
+      background: #5e2a8c;
+    }
+
+    .dark-theme #earnings {
+      background: rgba(0, 0, 0, 0.6);
+      color: #e0e0e0;
+      border: none;
+    }
+
+    .dark-theme .toggle-btn {
+      background-color: #5e2a8c;
+    }
+
+    .dark-theme .reset-btn {
+      background-color: #7b1fa2;
+    }
+
+    .toggle-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 16px;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .toggle-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .reset-btn {
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .reset-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      .counter-block {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .counter-block label {
+        text-align: left;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      .counter-block input,
+      .counter-block button {
+        width: 100%;
+      }
+
+      .toggle-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="light-theme">
+  <div class="container">
+    <div class="counter-block">
+      <label>Обычные звонки:</label>
+      <input id="callCost" type="number" value="20" step="any" onchange="updateEarnings()" />
+      <button onclick="changeValue('calls', 1)">+</button>
+      <button onclick="changeValue('calls', -1)">-</button>
+      <input id="calls" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('calls')">Сбросить</button>
+    </div>
+    <div class="counter-block">
+      <label>Звонки в профильной линии:</label>
+      <input id="profileCallCost" type="number" value="30" step="any" onchange="updateEarnings()" />
+      <button onclick="changeValue('profileCalls', 1)">+</button>
+      <button onclick="changeValue('profileCalls', -1)">-</button>
+      <input id="profileCalls" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('profileCalls')">Сбросить</button>
+    </div>
+    <div class="counter-block">
+      <label>Письменные тикеты:</label>
+      <input id="ticketCost" type="number" value="10" step="any" onchange="updateEarnings()" />
+      <button onclick="changeValue('tickets', 1)">+</button>
+      <button onclick="changeValue('tickets', -1)">-</button>
+      <input id="tickets" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('tickets')">Сбросить</button>
+    </div>
+    <div class="counter-block">
+      <label>НТО в голосовой сортировке:</label>
+      <input id="ntoCost" type="number" value="5" step="any" onchange="updateEarnings()" />
+      <button onclick="changeValue('nto', 1)">+</button>
+      <button onclick="changeValue('nto', -1)">-</button>
+      <input id="nto" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('nto')">Сбросить</button>
+    </div>
+  </div>
+
+  <div id="earnings" title="БО — бонусные очки">Заработок: 0.00 БО</div>
+  <button class="toggle-btn" onclick="toggleTheme()">Переключить тему</button>
+
+  <script>
+    const LIGHT_BG = "url('https://giffiles.alphacoders.com/438/438.gif')";
+    const DARK_BG = "url('https://giffiles.alphacoders.com/315/3151.gif')";
+
+    window.onload = function () {
+      loadState();
+      updateEarnings();
+      updateBackground();
+    };
+
+    function changeValue(id, delta) {
+      const input = document.getElementById(id);
+      let value = parseFloat(input.value) || 0;
+      value = Math.max(0, value + delta);
+      input.value = value;
+      updateEarnings();
+    }
+
+    function resetValue(id) {
+      document.getElementById(id).value = 0;
+      updateEarnings();
+    }
+
+    function updateEarnings() {
+      const calls = +document.getElementById('calls').value || 0;
+      const profileCalls = +document.getElementById('profileCalls').value || 0;
+      const tickets = +document.getElementById('tickets').value || 0;
+      const nto = +document.getElementById('nto').value || 0;
+
+      const callCost = +document.getElementById('callCost').value || 20;
+      const profileCallCost = +document.getElementById('profileCallCost').value || 30;
+      const ticketCost = +document.getElementById('ticketCost').value || 10;
+      const ntoCost = +document.getElementById('ntoCost').value || 5;
+
+      const total = (calls * callCost) + (profileCalls * profileCallCost) + (tickets * ticketCost) + (nto * ntoCost);
+      document.getElementById('earnings').innerText = `Заработок: ${total.toFixed(2)} БО`;
+
+      saveState();
+    }
+
+    function saveState() {
+      const state = {
+        calls: document.getElementById('calls').value,
+        profileCalls: document.getElementById('profileCalls').value,
+        tickets: document.getElementById('tickets').value,
+        nto: document.getElementById('nto').value,
+        theme: document.body.classList.contains('dark-theme') ? 'dark' : 'light'
+      };
+      localStorage.setItem('boEarningsState', JSON.stringify(state));
+    }
+
+    function loadState() {
+      const state = JSON.parse(localStorage.getItem('boEarningsState'));
+      if (state) {
+        document.getElementById('calls').value = state.calls;
+        document.getElementById('profileCalls').value = state.profileCalls;
+        document.getElementById('tickets').value = state.tickets;
+        document.getElementById('nto').value = state.nto;
+        if (state.theme === 'dark') toggleTheme(true);
+      }
+    }
+
+    function toggleTheme(isLoad = false) {
+      const body = document.body;
+      body.classList.toggle('dark-theme', !body.classList.contains('dark-theme'));
+      body.classList.toggle('light-theme', !body.classList.contains('light-theme'));
+      updateBackground();
+      if (!isLoad) updateEarnings();
+    }
+
+    function updateBackground() {
+      document.body.style.backgroundImage = document.body.classList.contains('dark-theme') ? DARK_BG : LIGHT_BG;
+    }
+  </script>
+</body>
+</html>
