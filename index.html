@@ -216,36 +216,67 @@
 <body class="light-theme">
   <div class="container">
     <div class="counter-block">
-      <label>Обычные звонки:</label>
-      <input id="callCost" type="number" value="20" step="any" onchange="updateEarnings()" />
+      <label for="calls">Голосовая сортировка:</label>
+      <input id="callCost" type="number" value="20" step="any" min="0" onchange="updateEarnings()" />
       <button onclick="changeValue('calls', 1)">+</button>
       <button onclick="changeValue('calls', -1)">-</button>
       <input id="calls" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
       <button class="reset-btn" onclick="resetValue('calls')">Сбросить</button>
     </div>
+
     <div class="counter-block">
-      <label>Звонки в профильной линии:</label>
-      <input id="profileCallCost" type="number" value="30" step="any" onchange="updateEarnings()" />
+      <label for="profileCalls">Звонки в профильной линии:</label>
+      <input id="profileCallCost" type="number" value="30" step="any" min="0" onchange="updateEarnings()" />
       <button onclick="changeValue('profileCalls', 1)">+</button>
       <button onclick="changeValue('profileCalls', -1)">-</button>
       <input id="profileCalls" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
       <button class="reset-btn" onclick="resetValue('profileCalls')">Сбросить</button>
     </div>
+
     <div class="counter-block">
-      <label>Письменные тикеты:</label>
-      <input id="ticketCost" type="number" value="10" step="any" onchange="updateEarnings()" />
+      <label for="tickets">Письменные тикеты:</label>
+      <input id="ticketCost" type="number" value="10" step="any" min="0" onchange="updateEarnings()" />
       <button onclick="changeValue('tickets', 1)">+</button>
       <button onclick="changeValue('tickets', -1)">-</button>
       <input id="tickets" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
       <button class="reset-btn" onclick="resetValue('tickets')">Сбросить</button>
     </div>
+
     <div class="counter-block">
-      <label>НТО в голосовой сортировке:</label>
-      <input id="ntoCost" type="number" value="5" step="any" onchange="updateEarnings()" />
+      <label for="nto">НТО в голосовой сортировке:</label>
+      <input id="ntoCost" type="number" value="5" step="any" min="0" onchange="updateEarnings()" />
       <button onclick="changeValue('nto', 1)">+</button>
       <button onclick="changeValue('nto', -1)">-</button>
       <input id="nto" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
       <button class="reset-btn" onclick="resetValue('nto')">Сбросить</button>
+    </div>
+
+    <div class="counter-block">
+      <label for="premiumCalls">Звонки премиальная линия:</label>
+      <input id="premiumCallCost" type="number" value="20.5" step="any" min="0" onchange="updateEarnings()" />
+      <button onclick="changeValue('premiumCalls', 1)">+</button>
+      <button onclick="changeValue('premiumCalls', -1)">-</button>
+      <input id="premiumCalls" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('premiumCalls')">Сбросить</button>
+    </div>
+
+    <div class="counter-block">
+      <label for="premiumLetters">Письмо премиальная линия:</label>
+      <input id="premiumLetterCost" type="number" value="13.95" step="any" min="0" onchange="updateEarnings()" />
+      <button onclick="changeValue('premiumLetters', 1)">+</button>
+      <button onclick="changeValue('premiumLetters', -1)">-</button>
+      <input id="premiumLetters" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('premiumLetters')">Сбросить</button>
+    </div>
+
+    <!-- Новый блок Л2КЗ -->
+    <div class="counter-block">
+      <label for="l2kz">Л2КЗ:</label>
+      <input id="l2kzCost" type="number" value="10.26" step="any" min="0" onchange="updateEarnings()" />
+      <button onclick="changeValue('l2kz', 1)">+</button>
+      <button onclick="changeValue('l2kz', -1)">-</button>
+      <input id="l2kz" type="number" value="0" min="0" step="1" onchange="updateEarnings()" />
+      <button class="reset-btn" onclick="resetValue('l2kz')">Сбросить</button>
     </div>
   </div>
 
@@ -280,13 +311,27 @@
       const profileCalls = +document.getElementById('profileCalls').value || 0;
       const tickets = +document.getElementById('tickets').value || 0;
       const nto = +document.getElementById('nto').value || 0;
+      const premiumCalls = +document.getElementById('premiumCalls').value || 0;
+      const premiumLetters = +document.getElementById('premiumLetters').value || 0;
+      const l2kz = +document.getElementById('l2kz').value || 0;
 
       const callCost = +document.getElementById('callCost').value || 20;
       const profileCallCost = +document.getElementById('profileCallCost').value || 30;
       const ticketCost = +document.getElementById('ticketCost').value || 10;
       const ntoCost = +document.getElementById('ntoCost').value || 5;
+      const premiumCallCost = +document.getElementById('premiumCallCost').value || 20.5;
+      const premiumLetterCost = +document.getElementById('premiumLetterCost').value || 13.95;
+      const l2kzCost = +document.getElementById('l2kzCost').value || 10.26;
 
-      const total = (calls * callCost) + (profileCalls * profileCallCost) + (tickets * ticketCost) + (nto * ntoCost);
+      const total = 
+        (calls * callCost) + 
+        (profileCalls * profileCallCost) + 
+        (tickets * ticketCost) + 
+        (nto * ntoCost) + 
+        (premiumCalls * premiumCallCost) + 
+        (premiumLetters * premiumLetterCost) + 
+        (l2kz * l2kzCost);
+
       document.getElementById('earnings').innerText = `Заработок: ${total.toFixed(2)} БО`;
 
       saveState();
@@ -298,6 +343,9 @@
         profileCalls: document.getElementById('profileCalls').value,
         tickets: document.getElementById('tickets').value,
         nto: document.getElementById('nto').value,
+        premiumCalls: document.getElementById('premiumCalls').value,
+        premiumLetters: document.getElementById('premiumLetters').value,
+        l2kz: document.getElementById('l2kz').value,
         theme: document.body.classList.contains('dark-theme') ? 'dark' : 'light'
       };
       localStorage.setItem('boEarningsState', JSON.stringify(state));
@@ -310,21 +358,31 @@
         document.getElementById('profileCalls').value = state.profileCalls;
         document.getElementById('tickets').value = state.tickets;
         document.getElementById('nto').value = state.nto;
-        if (state.theme === 'dark') toggleTheme(true);
+        document.getElementById('premiumCalls').value = state.premiumCalls || 0;
+        document.getElementById('premiumLetters').value = state.premiumLetters || 0;
+        document.getElementById('l2kz').value = state.l2kz || 0;
+        if (state.theme === 'dark') {
+          document.body.classList.add('dark-theme');
+          document.body.classList.remove('light-theme');
+        } else {
+          document.body.classList.add('light-theme');
+          document.body.classList.remove('dark-theme');
+        }
       }
     }
 
-    function toggleTheme(isLoad = false) {
+    function toggleTheme() {
       const body = document.body;
-      body.classList.toggle('dark-theme', !body.classList.contains('dark-theme'));
-      body.classList.toggle('light-theme', !body.classList.contains('light-theme'));
+      const isDark = body.classList.contains('dark-theme');
+      body.classList.toggle('dark-theme', !isDark);
+      body.classList.toggle('light-theme', isDark);
       updateBackground();
-      if (!isLoad) updateEarnings();
+      updateEarnings();
     }
 
     function updateBackground() {
       document.body.style.backgroundImage = document.body.classList.contains('dark-theme') ? DARK_BG : LIGHT_BG;
-      document.body.style.backgroundSize = '1920px 1080px'; // Устанавливаем фиксированный размер 1920x1080 для GIF
+      document.body.style.backgroundSize = '1920px 1080px';
     }
   </script>
 </body>
